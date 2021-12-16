@@ -1,0 +1,2 @@
+#!/bin/sh
+gcc -O3 -march=native -mtune=native -Wall -I. -Isubroutines -DKAT -DKATNUM=`cat mceliece348864/KATNUM` "-DCRYPTO_NAMESPACE(x)=x" "-D_CRYPTO_NAMESPACE(x)=_##x" -o exp example.c mceliece348864/nist/rng.c mceliece348864/benes.c mceliece348864/bm.c mceliece348864/controlbits.c mceliece348864/decrypt.c mceliece348864/encrypt.c mceliece348864/gf.c mceliece348864/operations.c mceliece348864/pk_gen.c mceliece348864/root.c mceliece348864/sk_gen.c mceliece348864/synd.c mceliece348864/transpose.c mceliece348864/util.c  -Lkeccak   -lkeccak -lcrypto -ldl 
