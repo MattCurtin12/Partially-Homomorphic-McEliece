@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "mceliece348864/nist/rng.h"
-#include "mceliece348864/crypto_kem.h"
+#include "../mceliece348864/nist/rng.h"
+#include "../mceliece348864/crypto_kem.h"
 
 
 void fprintBstr(FILE *fp, char *S, unsigned char *A, unsigned long long L);
@@ -61,15 +61,14 @@ int main(){
 	m1 = malloc(crypto_kem_BYTES);
 	m2 = malloc(crypto_kem_BYTES);
 
-	//Set m1 = 110, m2 = 101
-	int i;
-	for(i = 0; i < crypto_kem_BYTES - 3; i++){
+	for(int i = 0; i < crypto_kem_BYTES; i++){
 		m1[i] = 0;
 		m2[i] = 0;
 	}
-	m1[i] = 1; m2[i] = 1; i++;
-	m1[i] = 1; m2[i] = 0; i++;
-	m1[i] = 0; m2[i] = 1; 
+
+	//Set m1 = 110, m2 = 101
+	m1[crypto_kem_BYTES - 1] = 0x06;
+	m2[crypto_kem_BYTES - 1] = 0X05; 
 
 	fprintBstr(stdout, "Original m1: ", m1, crypto_kem_BYTES);
 	fprintBstr(stdout, "Original m2: ", m2, crypto_kem_BYTES);
@@ -91,15 +90,12 @@ int main(){
         ss2 = malloc(crypto_kem_BYTES);
         k2  = malloc(crypto_kem_CIPHERTEXTBYTES);
 
+
 	//Generate first secret key
 	if( crypto_kem_enc(k1, ss1, pk) != 0){
 		fprintf(stderr, "crytpo_kem_enc\n");
 		return 2;
 	}
-
-	//Encrypt first message with shared secret key using one time pad
-	otp(c1, crypto_kem_BYTES, m1, ss1);
-
 
         //Generate second secret key
         if( crypto_kem_enc(k2, ss2, pk) != 0){
@@ -107,8 +103,13 @@ int main(){
                 return 2;
         }
 
-        //Encrypt second message with shared secret key using one time pad
+
+	//Encrypt first message with shared secret key using one time pad
+	otp(c1, crypto_kem_BYTES, m1, ss1);
+        
+	//Encrypt second message with shared secret key using one time pad
         otp(c2, crypto_kem_BYTES, m2, ss2);
+
 
 	fprintBstr(stdout, "c1: ", c1, crypto_kem_BYTES);
         fprintBstr(stdout, "c2: ", c2, crypto_kem_BYTES);
