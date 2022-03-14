@@ -112,7 +112,7 @@ int main(){
 
 
 	fprintBstr(stdout, "c1: ", c1, crypto_kem_BYTES);
-        fprintBstr(stdout, "c2: ", c2, crypto_kem_BYTES);
+    fprintBstr(stdout, "c2: ", c2, crypto_kem_BYTES);
 	fprintf(stdout, "\n");
 
 
@@ -127,8 +127,8 @@ int main(){
 	otp(n2, crypto_kem_BYTES, c2, ss2);
 	
 	fprintBstr(stdout, "Decrypted m1: ", n1, crypto_kem_BYTES);
-        fprintBstr(stdout, "Decrypted m2: ", n2, crypto_kem_BYTES);
-        fprintf(stdout, "\n");
+    fprintBstr(stdout, "Decrypted m2: ", n2, crypto_kem_BYTES);
+    fprintf(stdout, "\n");
 	
 
 
@@ -139,7 +139,7 @@ int main(){
 	otp(c, crypto_kem_BYTES, c1, c2);
 
 	fprintBstr(stdout, "c\' = c1 + c2: ", c, crypto_kem_BYTES);
-        fprintf(stdout, "\n");
+    fprintf(stdout, "\n");
 
 
 
@@ -179,9 +179,9 @@ int main(){
 	free(k1);
 
 	free(m2);
-        free(c2);
-        free(ss2);
-        free(k2);	
+    free(c2);
+    free(ss2);
+    free(k2);	
 
 	free(c);
 	

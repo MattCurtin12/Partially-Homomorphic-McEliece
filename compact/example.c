@@ -4,9 +4,10 @@
 #include "../mceliece348864/nist/rng.h"
 #include "../mceliece348864/crypto_kem.h"
 #include "../mceliece348864/params.h"
-//#include "compact_enc.h"
+#include "compact_enc.h"
 #include "../mceliece348864/decrypt.h"
 #include "../mceliece348864/encrypt.h"
+#include "../mceliece348864/api.h"
 
 void fprintBstr(FILE *fp, char *S, unsigned char *A, unsigned long long L);
 void otp(unsigned char *out, unsigned long long length, unsigned char *in1, unsigned char *in2);
@@ -62,28 +63,58 @@ int main(){
 
 	//Generate error vectors e1 and e2 for m1 and m2
 	unsigned char e1_add[SYS_N/8] = {0};
-        unsigned char *e1 = e1_add;
+    unsigned char *e1 = e1_add;
 
+	unsigned char e2_add[SYS_N/8] = {0};
+    unsigned char *e2 = e2_add;
 	
+
+	//Allocate memory for c1 and c2
+	unsigned char *c1  = malloc(SYND_BYTES);
+	unsigned char *c2  = malloc(SYND_BYTES);
+
+
+
+    //Generate error vector of length N-2 with t/2-2 errors
+	gen_e(e1);
+	gen_e(e2);
 	
+    //Append messages, (101) and (110)
+	e1[SYS_N/8-1] |= 0x05;
+	e2[SYS_N/8-1] |= 0x06;
+
+    fprintf(stdout, "m1: %02X\n", e1[SYS_N/8-1]);
+    fprintf(stdout, "m2: %02X\n", e2[SYS_N/8-1]);
+
+    fprintBstr(stdout, "e1: ", e1, SYS_N/8);
+    fprintBstr(stdout, "e2: ", e2, SYS_N/8);
+
+    //Compute sydrome for message of length N
+	syndrome(c1, pk, e1);
+	syndrome(c2, pk, e2);
+
+
+
+    //Perform bitwise xor on ciphertexts
+    unsigned char *c  = malloc(SYND_BYTES);
+    otp(c, SYND_BYTES, c1, c2); 
 	
 
-	//Compute syndrome to find c1 and c2
-	unsigned char *c1  = malloc(crypto_kem_CIPHERTEXTBYTES);
 
 
+    //Make room for error vector for result
+    unsigned char t1_add[SYS_N/8] = {1};
+    unsigned char *t1 = t1_add;
 
-	unsigned char t1_add[SYS_N/8] = {1};
-        unsigned char *t1 = t1_add;
+    //Decrypt error vector with t errors
+    decrypt(t1, sk+40, c);
 
-
-
-
-	encrypt(c1, pk, e1);
-	decrypt(t1, sk, c1);
-        fprintBstr(stdout, "t1: ", t1, SYS_N/8);
+    fprintBstr(stdout, "\nc1 + c2 error vector: ", t1, SYS_N/8);
+    fprintf(stdout, "c1 + c2: %02X\n", t1[SYS_N/8-1]);
 
 	free(c1);
+	free(c2);
+    free(c);
 
 	return 0;
 }

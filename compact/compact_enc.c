@@ -16,6 +16,12 @@
 #include "compact_enc.h"
 
 
+#include "../mceliece348864/benes.h"
+#include "../mceliece348864/bm.h"
+#include "../mceliece348864/synd.h"
+#include "../mceliece348864/root.h"
+#include "../mceliece348864/gf.h"
+
 static inline unsigned char same_mask(uint16_t x, uint16_t y)
 {
 	uint32_t mask;
@@ -32,8 +38,11 @@ static inline unsigned char same_mask(uint16_t x, uint16_t y)
 void gen_e(unsigned char *e)
 {
 
-	//#undef SYS_T
-	//#define SYS_T SYS_T_ENC
+	#undef SYS_T
+    #define SYS_T SYS_T_ENC
+
+    #undef SYS_N
+    #define SYS_N SYS_N_ENC
 
 	int i, j, eq, count;
 
@@ -80,7 +89,7 @@ void gen_e(unsigned char *e)
 	for (j = 0; j < SYS_T; j++)
 		val[j] = 1 << (ind[j] & 7);
 
-	for (i = 0; i < SYS_N/8 - 1; i++) 
+	for (i = 0; i < SYS_N/8 ; i++) 
 	{
 		e[i] = 0;
 
@@ -97,10 +106,11 @@ void gen_e(unsigned char *e)
 /* output: syndrome s */
 void syndrome(unsigned char *s, const unsigned char *pk, unsigned char *e)
 {
+    #undef SYS_T
+    #define SYS_T SYS_T_ORIG
 
-
-        //#undef SYS_T
-	//#define SYS_T SYS_T_ENC
+    #undef SYS_N
+    #define SYS_N SYS_N_ORIG
 
 	unsigned char b, row[SYS_N/8];
 	const unsigned char *pk_ptr = pk;
@@ -134,5 +144,3 @@ void syndrome(unsigned char *s, const unsigned char *pk, unsigned char *e)
 		pk_ptr += PK_ROW_BYTES;
 	}
 }
-
-
