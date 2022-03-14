@@ -80,8 +80,8 @@ int main(){
 	gen_e(e2);
 	
     //Append messages, (101) and (110)
-	e1[SYS_N/8-1] |= 0x05;
-	e2[SYS_N/8-1] |= 0x06;
+	e1[SYS_N/8-1] |= 0x06;
+	e2[SYS_N/8-1] |= 0x05;
 
     fprintf(stdout, "m1: %02X\n", e1[SYS_N/8-1]);
     fprintf(stdout, "m2: %02X\n", e2[SYS_N/8-1]);
