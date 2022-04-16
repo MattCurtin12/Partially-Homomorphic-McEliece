@@ -3,24 +3,24 @@
 */
 
 
-#include "../mceliece348864/util.h"
-#include "../mceliece348864/params.h"
-#include "../mceliece348864/randombytes.h"
+#include "../mceliece6688128/util.h"
+#include "../mceliece6688128/params.h"
+#include "../mceliece6688128/randombytes.h"
 
 #include <stdint.h>
 #include <stdio.h>
 #include <assert.h>
 #include <string.h>
 
-#include "../mceliece348864/gf.h"
+#include "../mceliece6688128/gf.h"
 #include "compact_enc.h"
 
 
-#include "../mceliece348864/benes.h"
-#include "../mceliece348864/bm.h"
-#include "../mceliece348864/synd.h"
-#include "../mceliece348864/root.h"
-#include "../mceliece348864/gf.h"
+#include "../mceliece6688128/benes.h"
+#include "../mceliece6688128/bm.h"
+#include "../mceliece6688128/synd.h"
+#include "../mceliece6688128/root.h"
+#include "../mceliece6688128/gf.h"
 
 static inline unsigned char same_mask(uint16_t x, uint16_t y)
 {
