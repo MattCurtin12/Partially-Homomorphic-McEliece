@@ -5,7 +5,6 @@ void otp(unsigned char *out, unsigned long long length, const unsigned char *in1
 
 //Ciphertext data type
 typedef struct{
-	unsigned int
 	unsigned char *c_m;	//Part of ciphertext containing message
 	unsigned char *c_k[50];	//List of ciphertext containing symmetric keys
 	unsigned int num_ops;	//Number of operations on ciphertext, aka number of symmetric keys
